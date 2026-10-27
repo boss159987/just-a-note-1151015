@@ -393,6 +393,8 @@ input[type="color"]{width:44px;height:36px;min-height:0;padding:2px;border:0;bac
  .drop{animation:drop 1.6s ease-in infinite}@keyframes drop{70%{transform:translateY(5px);opacity:1}100%{transform:translateY(7px);opacity:0}}}
 .scene-btn:active svg{transform:scale(.96)}
 .impv{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;background:var(--sunk);border-radius:8px;padding:10px 12px;font-size:13px}.impv b{width:100%;font-weight:500}.impv span{color:var(--ink)}.impv small{width:100%;color:var(--muted)}
+.ccols button{position:relative}.ccols .used{position:absolute;right:2px;top:2px;width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 0 1.5px rgba(40,30,60,.45)}
+.cmrow{display:flex;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--line)}.cmrow .main{flex:1;min-width:0}.cmrow .t{font-size:14px}.cmrow .s{font-size:11.5px;color:var(--muted)}.cmrow .btn.sm{min-height:32px;padding:2px 10px}
 </style>
 
 <header class="top"><div class="top-in"><div class="brand"><button class="avatar" id="avatar-btn" type="button" aria-label="更換頭像"></button><span>小記一下</span></div><div class="row" style="gap:12px"><div class="sync" id="sync"><i class="dot"></i><span>連線中…</span></div><button class="gear pp-hd" data-pp type="button" aria-label="旅行護照"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6z"/><circle cx="12" cy="10.5" r="3.2"/><path d="M8.8 10.5h6.4M12 7.3c1.2 1.6 1.2 4.8 0 6.4M12 7.3c-1.2 1.6-1.2 4.8 0 6.4M9.5 17h5"/></svg><span class="ppbadge" id="pp-badge"></span></button><button class="gear" id="gear" type="button" aria-label="設定"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div></div></header>
@@ -462,7 +464,7 @@ input[type="color"]{width:44px;height:36px;min-height:0;padding:2px;border:0;bac
   <section id="v-expense" class="view" hidden>
     <div class="card" style="margin-top:12px">
       <div id="quick-wrap"></div>
-      <h3>記一筆支出</h3>
+      <div class="h3row"><h3>記一筆支出</h3><button type="button" class="btn ghost sm" id="cat-manage">管理類別</button></div>
       <div class="catgrid" id="cat-grid"></div>
       <form id="exp-form" class="stack" novalidate hidden>
         <label class="f">買了什麼<input id="exp-note" type="text" list="exp-notes" autocomplete="off" placeholder="例如：午餐、手搖飲" maxlength="80"><datalist id="exp-notes"></datalist></label>
@@ -1722,9 +1724,12 @@ const ICONS={
 const CAT_ICONS=['food','cup','bus','home','bag','bill','med','plane','game','gift','heart','book','paw','dots'];
 const icon=(k,size=18)=>`<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k]||ICONS.dots}</svg>`;
 const DEF_CATS=[{id:'food',name:'飲食',icon:'food',col:'#E0806A'},{id:'traffic',name:'交通',icon:'bus',col:'#6F9BD1'},{id:'home',name:'居家生活',icon:'home',col:'#94B886'},
- {id:'fun',name:'娛樂購物',icon:'bag',col:'#E39AAB'},{id:'bills',name:'帳單保險',icon:'bill',col:'#9B86C6'},{id:'other',name:'其他',icon:'dots',col:'#B9B0C4'}];
-const cats=()=>Array.isArray(SET.cats)&&SET.cats.length?SET.cats:DEF_CATS;
-const catById=id=>cats().find(c=>c.id===id);
+ {id:'fun',name:'娛樂購物',icon:'bag',col:'#E39AAB'},{id:'bills',name:'帳單保險',icon:'bill',col:'#9B86C6'}];
+const OTHER_CAT={id:'other',name:'其他',icon:'dots',col:'#B9B0C4'};
+const CAT_COLORS=['#E0806A','#6F9BD1','#94B886','#E39AAB','#9B86C6','#E3B65E','#5FA9A6','#EDA77E','#A8678F','#7FB8D8','#C9A27E','#8E9AAF'];
+const cats=()=>(Array.isArray(SET.cats)&&SET.cats.length?SET.cats:DEF_CATS).filter(c=>c.id!=='other');
+const catById=id=>cats().find(c=>c.id===id)||(id==='other'?OTHER_CAT:undefined);
+const freeColor=(skip)=>CAT_COLORS.find(c=>!cats().some(x=>x.col===c&&x.id!==skip))||CAT_COLORS[cats().length%CAT_COLORS.length];
 function catEnv(c){if(!c)return accs()[0]?.id||'';if(c.env&&accById(c.env))return c.env;
   const L=accs(),f=re=>(L.find(a=>re.test(a.name))||{}).id;
   if(c.id==='bills')return f(/保險|電話|油|帳單|固定/)||f(/日常|生活/)||L[0]?.id||'';
@@ -1797,22 +1802,35 @@ function renderQuick(){const w=$('#quick-wrap');if(!w)return;const list=favList(
 }
 
 /* category editor */
-function openCat(id){const c=id?catById(id):null;let ic=c?c.icon:'paw';
+function openCat(id){const c=id&&id!=='other'?catById(id):null;let ic=c?c.icon:'paw',col=c?c.col:freeColor();
   openSheet(`${head(c?'編輯類別':'新增類別')}<form class="stack" id="c-form" novalidate>
     <label class="f">名稱<input id="c-name" type="text" maxlength="10" value="${esc(c?c.name:'')}" placeholder="例如：寵物、孝親"></label>
     <div><div class="muted" style="font-size:12px;margin-bottom:6px">圖示</div><div class="icgrid">${CAT_ICONS.map(k=>`<button type="button" class="icb" data-ic="${k}" aria-pressed="${k===ic}">${icon(k,20)}</button>`).join('')}</div></div>
+    <div><div class="muted" style="font-size:12px;margin-bottom:6px">顏色 <small>（有小點的已經被其他類別用了）</small></div><div class="colors ccols">${CAT_COLORS.map(k=>{const u=cats().find(x=>x.col===k&&(!c||x.id!==c.id));return `<button type="button" style="--c:${k}" data-col="${k}" aria-pressed="${k===col}" aria-label="${u?'已用於'+u.name:'顏色'}" title="${u?'已用於「'+esc(u.name)+'」':''}">${u?'<i class="used"></i>':''}</button>`}).join('')}</div></div>
     <label class="f">預設從哪個項目扣<select id="c-env"><option value="">自動判斷</option>${accs().map(a=>`<option value="${a.id}" ${c&&c.env===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select></label>
     <div class="err" id="c-err"></div>${c?delBlock:'<button class="btn" type="submit">新增類別</button>'}</form>`,body=>{
     body.querySelectorAll('[data-ic]').forEach(b=>b.onclick=()=>{ic=b.dataset.ic;body.querySelectorAll('[data-ic]').forEach(x=>x.setAttribute('aria-pressed',x===b))});
-    if(c)wireDelete(body,'刪除類別不會刪掉已記的支出，它們會顯示在「其他」。',()=>{setSetting({cats:cats().filter(x=>x.id!==c.id)});closeSheet();toast('已刪除類別')});
+    body.querySelectorAll('[data-col]').forEach(b=>b.onclick=()=>{col=b.dataset.col;body.querySelectorAll('[data-col]').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+    if(c)wireDelete(body,'刪除類別不會刪掉已記的支出，它們會顯示成「未分類」。',()=>{setSetting({cats:cats().filter(x=>x.id!==c.id)});if(EX.cat===c.id)EX.cat='';if(ui.catMgr){ui.catMgr=false;openCatMgr()}else closeSheet();toast('已刪除類別')});
     body.querySelector('#c-form').onsubmit=e=>{e.preventDefault();const name=body.querySelector('#c-name').value.trim(),env=body.querySelector('#c-env').value;
       if(!name){body.querySelector('#c-err').textContent='請輸入名稱';return}
       if(cats().some(x=>x.name===name&&(!c||x.id!==c.id))){body.querySelector('#c-err').textContent='已經有這個類別';return}
       const cols=['#5FA9A6','#E3B65E','#A8678F','#EDA77E','#3E9C96','#6F9BD1','#E0806A'];
-      if(c)setSetting({cats:cats().map(x=>x.id===c.id?{...x,name,icon:ic,env}:x)});
-      else{const nc={id:'c'+Date.now().toString(36),name,icon:ic,col:cols[cats().length%cols.length],env};setSetting({cats:[...cats(),nc]});EX.cat=nc.id;EX.envAuto=true}
-      closeSheet();render()}});
+      if(c)setSetting({cats:cats().map(x=>x.id===c.id?{...x,name,icon:ic,env,col}:x)});
+      else{const nc={id:'c'+Date.now().toString(36),name,icon:ic,col,env};setSetting({cats:[...cats(),nc]});EX.cat=nc.id;EX.envAuto=true}
+      if(ui.catMgr){ui.catMgr=false;openCatMgr()}else closeSheet();render()}});
 }
+
+function openCatMgr(){
+  const list=()=>cats().map((c,i,a)=>`<div class="cmrow"><i class="qi" style="--c:${c.col}">${icon(c.icon,14)}</i><div class="main"><div class="t">${esc(c.name)}</div><div class="s">扣：${esc((accById(c.env)||accById(catEnv(c))||{name:'—'}).name)}${c.env?'':'（自動）'}・${S.expenses.filter(x=>x.catId===c.id).length} 筆</div></div>
+    <button type="button" class="btn ghost sm" data-cm-up="${c.id}" ${i===0?'disabled':''} aria-label="往前移">↑</button><button type="button" class="btn ghost sm" data-cm-edit="${c.id}">修改</button></div>`).join('');
+  openSheet(`${head('管理類別')}<p class="muted" style="font-size:12px;margin:0 0 8px">點「修改」可以改名稱、圖示、顏色或刪除；↑ 可以調整在記帳畫面的順序。</p><div id="cm-list">${list()}</div><button type="button" class="btn" id="cm-add" style="width:100%;margin-top:12px">＋ 新增類別</button>`,body=>{
+    body.querySelector('#cm-add').onclick=()=>{ui.catMgr=true;openCat()};
+    body.querySelector('#cm-list').onclick=e=>{const ed=e.target.closest('[data-cm-edit]'),up=e.target.closest('[data-cm-up]');
+      if(ed){ui.catMgr=true;openCat(ed.dataset.cmEdit);return}
+      if(up){const a=[...cats()],i=a.findIndex(x=>x.id===up.dataset.cmUp);if(i>0){[a[i-1],a[i]]=[a[i],a[i-1]];setSetting({cats:a});body.querySelector('#cm-list').innerHTML=list()}}}});
+}
+$('#cat-manage').onclick=openCatMgr;
 function renderCatSettings(){const el=$('#cat-set');if(!el)return;
   el.innerHTML=cats().map(c=>`<button type="button" class="li" data-editcat="${c.id}" style="padding:10px 0"><i class="qi" style="--c:${c.col}">${icon(c.icon,14)}</i><div class="main"><div class="t">${esc(c.name)}</div><div class="s">扣：${esc((accById(c.env)||accById(catEnv(c))||{name:'—'}).name)}${c.env?'':'（自動）'}</div></div></button>`).join('');
   el.querySelectorAll('[data-editcat]').forEach(b=>b.onclick=()=>openCat(b.dataset.editcat))}
